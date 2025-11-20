@@ -1,0 +1,6 @@
+class Captioner:
+    def __init__(self, model_name: str = "llava-hf/llava-1.5-7b-hf"):
+        ...
+
+    def caption(self, image) -> str:
+        ...
