@@ -9,6 +9,8 @@ class GenerativeUncertaintyResult:
     model: str
     mean_similarity: float
     variance_similarity: float
+    category: str
+    num_images: int
 
 def compute_generative_uncertainty(clip_scorer, images: List):
     # pairwise CLIP similarities

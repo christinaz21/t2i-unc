@@ -1,6 +1,6 @@
 from typing import List, Dict, Any
 from models.base_t2i import BaseT2IModel
-from src.utils.seed import set_seed_global
+# from src.utils.seed import set_seed_global
 from src.utils.io import save_image_with_metadata
 
 class ImageGenerator:

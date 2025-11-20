@@ -29,13 +29,13 @@ from tqdm import tqdm
 
 # --- Project imports: adjust if your structure differs ---
 from src.prompts.prompt_dataset import PromptDataset
-# from src.generation.generator import ImageGenerator
+from src.generation.generator import ImageGenerator
 from src.uncertainty.generative import (
     compute_generative_uncertainty,
     GenerativeUncertaintyResult,
 )
 from models.clip_encoder import ClipScorer
-# from models.stable_diffusion import StableDiffusionModel
+from models.stable_diffusion import StableDiffusionModel
 # from models.sdxl import SDXLModel
 # from models.pixart_alpha import PixArtModel
 
@@ -44,8 +44,8 @@ from models.clip_encoder import ClipScorer
 
 MODEL_REGISTRY = {
     "sd15": StableDiffusionModel,
-    "sdxl": SDXLModel,
-    "pixart": PixArtModel,
+    # "sdxl": SDXLModel,
+    # "pixart": PixArtModel,
 }
 
 
@@ -66,13 +66,13 @@ def parse_args() -> argparse.Namespace:
         default="results/exp1_generative",
         help="Base directory to store outputs (images + CSV).",
     )
-    # parser.add_argument(
-    #     "--model",
-    #     type=str,
-    #     default="sd15",
-    #     choices=list(MODEL_REGISTRY.keys()),
-    #     help="Which T2I model to use.",
-    # )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="sd15",
+        choices=list(MODEL_REGISTRY.keys()),
+        help="Which T2I model to use.",
+    )
     parser.add_argument(
         "--num_images",
         type=int,
