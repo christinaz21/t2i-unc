@@ -1,0 +1,99 @@
+# -------------------------
+# Python / General
+# -------------------------
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+*.swp
+
+# -------------------------
+# Project-specific ignore rules
+# -------------------------
+
+# HuggingFace / Diffusers cache
+~/.cache/huggingface/
+.cache/
+huggingface/
+
+# Torch / Model weights
+*.pt
+*.pth
+*.bin
+*.safetensors
+*.ckpt
+
+# Logs & checkpoints
+logs/
+lightning_logs/
+checkpoints/
+*.ckpt
+*.pth
+*.pt
+
+# Experiment results
+results/
+outputs/
+wandb/
+mlruns/
+tensorboard/
+tb_logs/
+
+# Generated images/videos
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.mp4
+images/
+videos/
+
+# Metadata artifacts
+*.jsonl.tmp
+*.tmp
+*.npy
+*.npz
+
+# Python coverage / test cache
+.coverage
+htmlcov/
+.cache/
+pytest_cache/
+.ipynb_checkpoints/
+
+# -------------------------
+# Jupyter Notebook
+# -------------------------
+.ipynb_checkpoints
+*.ipynb_checkpoints
+
+# -------------------------
+# OS-specific clutter
+# -------------------------
+.DS_Store
+Thumbs.db
+
+# -------------------------
+# Editor backups
+# -------------------------
+.vscode/
+.idea/
+*.code-workspace
+
+# -------------------------
+# Slurm / HPC logs (Della/Princeton-specific)
+# -------------------------
+slurm-*.out
+slurm-*.err
+*.out
+*.err
