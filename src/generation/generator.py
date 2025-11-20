@@ -1,6 +1,5 @@
 from typing import List, Dict, Any
 from models.base_t2i import BaseT2IModel
-# from src.utils.seed import set_seed_global
 from src.utils.io import save_image_with_metadata
 
 class ImageGenerator:
@@ -12,9 +11,10 @@ class ImageGenerator:
         self,
         prompt: str,
         seeds: List[int],
+        return_latents: bool = False,
         extra_meta: Dict[str, Any] | None = None,
     ) -> List[Dict[str, Any]]:
-        results = self.model.generate(prompt, num_images=len(seeds), seeds=seeds)
+        results = self.model.generate(prompt, num_images=len(seeds), seeds=seeds, return_latents=return_latents)
         for r in results:
             meta = {
                 "model": self.model.name,

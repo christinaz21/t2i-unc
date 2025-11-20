@@ -4,13 +4,16 @@ Experiment 1: Generative Uncertainty (Seed Variance)
 
 For each prompt:
   - Generate N images from a fixed model with different random seeds.
-  - Compute pairwise CLIP similarities between the images.
+  - Compute pairwise CLIP similarities, LPIPS distance, and latent similarities between the images.
   - Aggregate into mean and variance as a measure of generative uncertainty.
 
 Outputs:
   - A CSV file with one row per (prompt, model) containing:
       prompt_id, prompt_text, category, model, num_images,
-      mean_similarity, variance_similarity
+      clip_mean_similarity, clip_variance_similarity, 
+      lpips_mean_distance, lpips_variance_distance,
+        latent_mean_cosine_similarity, latent_variance_cosine_similarity,
+        latent_mean_dimension_variance
 """
 
 import argparse
@@ -34,7 +37,9 @@ from src.uncertainty.generative import (
     compute_generative_uncertainty,
     GenerativeUncertaintyResult,
 )
+from src.uncertainty.latent import compute_latent_uncertainty
 from models.clip_encoder import ClipScorer
+from models.lpips_scorer import LPIPSScorer
 from models.stable_diffusion import StableDiffusionModel
 # from models.sdxl import SDXLModel
 # from models.pixart_alpha import PixArtModel
@@ -136,12 +141,10 @@ def ensure_dir(path: str | Path) -> Path:
     return p
 
 
-# ------------------ Main Experiment ------------------ #
-
 def main():
     args = parse_args()
 
-    # 1. Load prompts
+    # Load prompts
     prompts_ds = PromptDataset(args.prompts)
     selected_prompts = filter_prompts(prompts_ds, args.categories)
 
@@ -153,7 +156,7 @@ def main():
 
     prompts_ds.print_prompts()
 
-    # 2. Set up output dir structure
+    # Set up output dir structure
     out_dir = ensure_dir(args.out_dir)
     images_dir = ensure_dir(out_dir / "images")
     metadata_dir = ensure_dir(out_dir / "metadata")
@@ -162,15 +165,16 @@ def main():
     with open(out_dir / "config.json", "w") as f:
         json.dump(vars(args), f, indent=2)
 
-    # 3. Instantiate model + generator + CLIP scorer
+    # Instantiate model + generator + CLIP scorer
     ModelCls = MODEL_REGISTRY[args.model]
     t2i_model = ModelCls(device=args.device)
     generator = ImageGenerator(model=t2i_model, out_dir=str(images_dir))
     clip_scorer = ClipScorer(device=args.device)
+    lpips_scorer = LPIPSScorer(device=args.device)
 
     results: List[Dict] = []
 
-    # 4. Loop over prompts
+    # Loop over prompts
     print(
         f"Running generative uncertainty experiment with model={args.model}, "
         f"{len(selected_prompts)} prompts, {args.num_images} images/prompt."
@@ -183,7 +187,7 @@ def main():
 
         seeds = make_seeds(args.num_images, args.seed_offset)
 
-        # 4.1 Generate images for this prompt
+        # Generate images for this prompt
         # ImageGenerator is assumed to save images + return list of dicts:
         # {"image": PIL.Image, "prompt": str, "seed": int, "metadata": {...}}
         gen_results = generator.generate_for_prompt(
@@ -194,11 +198,12 @@ def main():
                 "category": category,
                 "experiment": "exp1_generative",
             },
+            return_latents=True,
         )
 
         images = [r["image"] for r in gen_results]
+        latents = [r["latents"] for r in gen_results]
 
-        # Optionally store per-prompt metadata (e.g., list of image paths)
         meta_path = metadata_dir / f"{prompt_id}.json"
         with open(meta_path, "w") as f:
             json.dump(
@@ -214,10 +219,12 @@ def main():
                 indent=2,
             )
 
-        # 4.2 Compute generative uncertainty metrics for this prompt
-        mean_sim, var_sim = compute_generative_uncertainty(
-            clip_scorer, images
+        # Compute generative uncertainty metrics for this prompt
+        (clip_mean_sim, clip_var_sim), (lpips_mean_sim, lpips_var_sim) = compute_generative_uncertainty(
+            clip_scorer, lpips_scorer, images
         )
+
+        latent_unc = compute_latent_uncertainty(latents)
 
         res = GenerativeUncertaintyResult(
             prompt_id=prompt_id,
@@ -225,13 +232,18 @@ def main():
             category=category,
             model=t2i_model.name,
             num_images=len(images),
-            mean_similarity=mean_sim,
-            variance_similarity=var_sim,
+            clip_mean_similarity=clip_mean_sim,
+            clip_variance_similarity=clip_var_sim,
+            lpips_mean_distance=lpips_mean_sim,
+            lpips_variance_distance=lpips_var_sim,
+            latent_mean_cosine_similarity=latent_unc.mean_cosine_similarity,
+            latent_variance_cosine_similarity=latent_unc.var_cosine_similarity,
+            latent_mean_dimension_variance=latent_unc.mean_dim_variance,
         )
 
         results.append(asdict(res))
 
-    # 5. Save results as CSV
+    # Save results as CSV
     df = pd.DataFrame(results)
     csv_path = out_dir / args.csv_name
     df.to_csv(csv_path, index=False)

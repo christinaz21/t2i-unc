@@ -29,9 +29,6 @@ class ClipScorer:
         # Put in eval mode
         self.model.eval()
 
-    # ------------------------------
-    # Utility
-    # ------------------------------
     def _ensure_pil(self, img: Union[Image.Image, torch.Tensor]) -> Image.Image:
         if isinstance(img, Image.Image):
             return img
@@ -46,9 +43,7 @@ class ClipScorer:
                 return Image.fromarray(img)
         raise TypeError(f"Unsupported image type for CLIP scoring: {type(img)}")
 
-    # ------------------------------
     # Image ↔ Text Similarity
-    # ------------------------------
     @torch.no_grad()
     def image_text_similarity(self, image, text: str) -> float:
         """
@@ -76,9 +71,7 @@ class ClipScorer:
         sim = (img_emb * txt_emb).sum().item()
         return float(sim)
 
-    # ------------------------------
     # Image ↔ Image Similarity
-    # ------------------------------
     @torch.no_grad()
     def image_image_similarity(self, img1, img2) -> float:
         """
@@ -104,4 +97,30 @@ class ClipScorer:
         img2_emb = img2_emb / img2_emb.norm()
 
         sim = (img1_emb * img2_emb).sum().item()
+        return float(sim)
+
+
+
+    @torch.no_grad()
+    def text_text_similarity(self, text1: str, text2: str) -> float:
+        """
+        Cosine similarity between two text strings in CLIP text embedding space.
+        """
+        inputs = self.processor(
+            text=[text1, text2],
+            images=None,
+            return_tensors="pt",
+            padding=True,
+        ).to(self.device)
+
+        # Get text features only
+        text_embeds = self.model.get_text_features(**{k: inputs[k] for k in ["input_ids", "attention_mask"]})
+        # text_embeds: (2, D)
+        t1 = text_embeds[0]
+        t2 = text_embeds[1]
+
+        # Normalize and cosine similarity
+        t1 = t1 / t1.norm()
+        t2 = t2 / t2.norm()
+        sim = (t1 * t2).sum().item()
         return float(sim)
