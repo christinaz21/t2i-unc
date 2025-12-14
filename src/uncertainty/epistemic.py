@@ -8,6 +8,7 @@ import PIL
 class EpistemicResult:
     prompt_id: str
     prompt_text: str
+    category: str
     models: list[str]
     mean_similarity: float
     variance_similarity: float
