@@ -4,7 +4,17 @@ Codebase for COS/SPI352 Final Project
 
 salloc --nodes=1  --cpus-per-task=8 --mem=48G --time=02:00:00 --gres=gpu:1 --exclude=neu306
 
+Example Images:
 
-![alt text](https://vscode-remote%2Bssh-002dremote-002b7b22686f73744e616d65223a226e6575726f6e69632e63732e7072696e6365746f6e2e656475227d.vscode-resource.vscode-cdn.net/u/cz5047/reas-llm-uq/t2i-unc/results/visualizations/prompt_grid_001_sd15.png?version%3D1765742233591)
 
+
+<img width="1074" height="2198" alt="image" src="https://github.com/user-attachments/assets/4944e446-7738-4451-8123-75018805b800" />
+
+<img width="1074" height="2198" alt="image" src="https://github.com/user-attachments/assets/62646c98-e789-4071-a97c-05ae0218283e" />
+
+<img width="1074" height="2198" alt="image" src="https://github.com/user-attachments/assets/0996aa98-a8fd-4c55-bd0e-592f85130b39" />
+
+<img width="1074" height="2198" alt="image" src="https://github.com/user-attachments/assets/c7b623ee-d3be-4e32-aced-cbd8f5045da8" />
+
+<img width="1074" height="2198" alt="image" src="https://github.com/user-attachments/assets/704de13e-0f8f-4916-987f-d0756bffda4c" />
 
