@@ -1,0 +1,104 @@
+{"id":"a001","category":"abstract","text":"an object"}
+{"id":"a002","category":"abstract","text":"a piece of furniture"}
+{"id":"a003","category":"abstract","text":"a written item"}
+{"id":"a004","category":"abstract","text":"a container"}
+{"id":"a005","category":"abstract","text":"a mode of transportation"}
+{"id":"a006","category":"abstract","text":"a vehicle"}
+{"id":"a007","category":"abstract","text":"a light source"}
+{"id":"a008","category":"abstract","text":"a carried item"}
+{"id":"a009","category":"abstract","text":"a timekeeping device"}
+{"id":"a010","category":"abstract","text":"a vessel"}
+{"id":"a011","category":"abstract","text":"a communication device"}
+{"id":"a012","category":"abstract","text":"a surface"}
+{"id":"a013","category":"abstract","text":"a travel item"}
+{"id":"a014","category":"abstract","text":"a wearable item"}
+{"id":"a015","category":"abstract","text":"a footwear item"}
+{"id":"a016","category":"abstract","text":"a small object"}
+{"id":"a017","category":"abstract","text":"a living thing"}
+{"id":"a018","category":"abstract","text":"a reflective surface"}
+{"id":"a019","category":"abstract","text":"a source of warmth"}
+{"id":"a020","category":"abstract","text":"a personal accessory"}
+{"id":"a021","category":"abstract","text":"a paper item"}
+{"id":"a022","category":"abstract","text":"a container object"}
+{"id":"a023","category":"abstract","text":"a decorative item"}
+{"id":"a024","category":"abstract","text":"an image-capturing device"}
+{"id":"a025","category":"abstract","text":"a soft object"}
+
+{"id":"a026","category":"abstract","text":"an animal"}
+{"id":"a027","category":"abstract","text":"a domesticated animal"}
+{"id":"a028","category":"abstract","text":"a flying creature"}
+{"id":"a029","category":"abstract","text":"a large animal"}
+{"id":"a030","category":"abstract","text":"an aquatic creature"}
+{"id":"a031","category":"abstract","text":"a small animal"}
+{"id":"a032","category":"abstract","text":"a farm animal"}
+{"id":"a033","category":"abstract","text":"a wild animal"}
+{"id":"a034","category":"abstract","text":"a predatory animal"}
+{"id":"a035","category":"abstract","text":"a mammal"}
+{"id":"a036","category":"abstract","text":"a grazing animal"}
+{"id":"a037","category":"abstract","text":"an amphibian"}
+{"id":"a038","category":"abstract","text":"a slow-moving creature"}
+{"id":"a039","category":"abstract","text":"a reptile"}
+{"id":"a040","category":"abstract","text":"a large mammal"}
+{"id":"a041","category":"abstract","text":"a cold-climate animal"}
+{"id":"a042","category":"abstract","text":"a marine mammal"}
+{"id":"a043","category":"abstract","text":"a primate"}
+{"id":"a044","category":"abstract","text":"a domesticated mammal"}
+{"id":"a045","category":"abstract","text":"a forest animal"}
+
+{"id":"a046","category":"abstract","text":"a human figure in motion"}
+{"id":"a047","category":"abstract","text":"a stationary human figure"}
+{"id":"a048","category":"abstract","text":"a seated human figure"}
+{"id":"a049","category":"abstract","text":"a fast-moving human figure"}
+{"id":"a050","category":"abstract","text":"a human engaged in an activity"}
+{"id":"a051","category":"abstract","text":"a human interacting with food"}
+{"id":"a052","category":"abstract","text":"a human holding something"}
+{"id":"a053","category":"abstract","text":"a human observing"}
+{"id":"a054","category":"abstract","text":"a human expression"}
+{"id":"a055","category":"abstract","text":"a human interaction"}
+{"id":"a056","category":"abstract","text":"a human engaged in work"}
+{"id":"a057","category":"abstract","text":"a human waiting"}
+{"id":"a058","category":"abstract","text":"a rhythmic human movement"}
+{"id":"a059","category":"abstract","text":"a resting human figure"}
+{"id":"a060","category":"abstract","text":"a human creating text"}
+{"id":"a061","category":"abstract","text":"a human performing a physical task"}
+{"id":"a062","category":"abstract","text":"a human preparing food"}
+{"id":"a063","category":"abstract","text":"a human physical activity"}
+{"id":"a064","category":"abstract","text":"a human engaged in commerce"}
+{"id":"a065","category":"abstract","text":"a human journey"}
+
+{"id":"a066","category":"abstract","text":"an outdoor environment"}
+{"id":"a067","category":"abstract","text":"an enclosed space"}
+{"id":"a068","category":"abstract","text":"a dwelling"}
+{"id":"a069","category":"abstract","text":"a structure"}
+{"id":"a070","category":"abstract","text":"a public green space"}
+{"id":"a071","category":"abstract","text":"a coastal environment"}
+{"id":"a072","category":"abstract","text":"a natural environment"}
+{"id":"a073","category":"abstract","text":"an urban environment"}
+{"id":"a074","category":"abstract","text":"a rural environment"}
+{"id":"a075","category":"abstract","text":"a mountainous environment"}
+{"id":"a076","category":"abstract","text":"a flowing body of water"}
+{"id":"a077","category":"abstract","text":"a body of water"}
+{"id":"a078","category":"abstract","text":"an open area"}
+{"id":"a079","category":"abstract","text":"a transportation pathway"}
+{"id":"a080","category":"abstract","text":"a connecting structure"}
+{"id":"a081","category":"abstract","text":"an interior passageway"}
+{"id":"a082","category":"abstract","text":"a cultivated outdoor space"}
+{"id":"a083","category":"abstract","text":"a learning environment"}
+{"id":"a084","category":"abstract","text":"a commercial space"}
+{"id":"a085","category":"abstract","text":"a social space"}
+
+{"id":"a086","category":"abstract","text":"an event involving food"}
+{"id":"a087","category":"abstract","text":"a social gathering"}
+{"id":"a088","category":"abstract","text":"a celebratory event"}
+{"id":"a089","category":"abstract","text":"a live presentation"}
+{"id":"a090","category":"abstract","text":"a formal interaction"}
+{"id":"a091","category":"abstract","text":"a movement through space"}
+{"id":"a092","category":"abstract","text":"a recreational activity"}
+{"id":"a093","category":"abstract","text":"a competitive activity"}
+{"id":"a094","category":"abstract","text":"an instructional activity"}
+{"id":"a095","category":"abstract","text":"a verbal interaction"}
+{"id":"a096","category":"abstract","text":"a pause in activity"}
+{"id":"a097","category":"abstract","text":"a form of movement"}
+{"id":"a098","category":"abstract","text":"a brief encounter"}
+{"id":"a099","category":"abstract","text":"a mode of transport"}
+{"id":"a100","category":"abstract","text":"an unspecified activity"}
