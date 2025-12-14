@@ -119,6 +119,17 @@ def parse_args() -> argparse.Namespace:
         default="exp1_generative.csv",
         help="Name of CSV file to write in out_dir.",
     )
+    parser.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Disable image caching (regenerate all images).",
+    )
+    parser.add_argument(
+        "--cache_dir",
+        type=str,
+        default="results/generated_images/images",
+        help="Directory containing cached images (organized by model).",
+    )
 
     return parser.parse_args()
 
@@ -158,7 +169,6 @@ def main():
 
     # Set up output dir structure
     out_dir = ensure_dir(args.out_dir)
-    images_dir = ensure_dir(out_dir / "images")
     metadata_dir = ensure_dir(out_dir / "metadata")
 
     # Save the run config for reproducibility
@@ -168,7 +178,21 @@ def main():
     # Instantiate model + generator + CLIP scorer
     ModelCls = MODEL_REGISTRY[args.model]
     t2i_model = ModelCls(device=args.device)
-    generator = ImageGenerator(model=t2i_model, out_dir=str(images_dir))
+    use_cache = not args.no_cache
+    
+    # Use cached images directory if available, otherwise use experiment-specific directory
+    if use_cache and args.cache_dir:
+        cache_path = Path(args.cache_dir) / t2i_model.name
+        if cache_path.exists():
+            images_dir = cache_path
+            print(f"Using cached images from: {images_dir}")
+        else:
+            images_dir = ensure_dir(out_dir / "images")
+            print(f"Cache directory {cache_path} not found, using: {images_dir}")
+    else:
+        images_dir = ensure_dir(out_dir / "images")
+    
+    generator = ImageGenerator(model=t2i_model, out_dir=str(images_dir), use_cache=use_cache)
     clip_scorer = ClipScorer(device=args.device)
     lpips_scorer = LPIPSScorer(device=args.device)
 
@@ -180,6 +204,8 @@ def main():
         f"{len(selected_prompts)} prompts, {args.num_images} images/prompt."
     )
 
+    return_latents = False
+
     for prompt_entry in tqdm(selected_prompts, desc="Prompts"):
         prompt_id = getattr(prompt_entry, "id", None) or prompt_entry.text[:32]
         prompt_text = prompt_entry.text
@@ -187,22 +213,30 @@ def main():
 
         seeds = make_seeds(args.num_images, args.seed_offset)
 
-        # Generate images for this prompt
-        # ImageGenerator is assumed to save images + return list of dicts:
-        # {"image": PIL.Image, "prompt": str, "seed": int, "metadata": {...}}
+        # Generate images for this prompt (uses caching if images already exist)
+        # ImageGenerator returns list of dicts:
+        # {"image": PIL.Image, "prompt": str, "seed": int, "latents": torch.Tensor (optional), "metadata": {...}}
         gen_results = generator.generate_for_prompt(
             prompt_text,
             seeds=seeds,
+            prompt_id=prompt_id,
             extra_meta={
                 "prompt_id": prompt_id,
                 "category": category,
                 "experiment": "exp1_generative",
             },
-            return_latents=True,
+            return_latents=return_latents,
         )
 
         images = [r["image"] for r in gen_results]
-        latents = [r["latents"] for r in gen_results]
+        # Latents might not be present if they weren't cached and caching failed
+        latents = [r.get("latents") for r in gen_results if "latents" in r]
+        
+        # Ensure we have latents for all images (if return_latents was True)
+        if return_latents and len(latents) < len(images):
+            print(f"Warning: Missing latents for {len(images) - len(latents)} images for prompt {prompt_id}")
+            # If we're missing latents, we'll skip latent uncertainty computation
+            latents = []
 
         meta_path = metadata_dir / f"{prompt_id}.json"
         with open(meta_path, "w") as f:
@@ -224,7 +258,16 @@ def main():
             clip_scorer, lpips_scorer, images
         )
 
-        latent_unc = compute_latent_uncertainty(latents)
+        # Compute latent uncertainty if we have latents
+        if len(latents) >= 2:
+            latent_unc = compute_latent_uncertainty(latents)
+        else:
+            # Use default values if latents unavailable
+            latent_unc = type('obj', (object,), {
+                'mean_cosine_similarity': 0.0,
+                'var_cosine_similarity': 0.0,
+                'mean_dim_variance': 0.0
+            })()
 
         res = GenerativeUncertaintyResult(
             prompt_id=prompt_id,

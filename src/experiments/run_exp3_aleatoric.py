@@ -107,6 +107,17 @@ def parse_args() -> argparse.Namespace:
         default="exp3_aleatoric.csv",
         help="Output CSV filename.",
     )
+    p.add_argument(
+        "--no-cache",
+        action="store_true",
+        help="Disable image caching (regenerate all images).",
+    )
+    p.add_argument(
+        "--cache_dir",
+        type=str,
+        default="results/generated_images/images",
+        help="Directory containing cached images (organized by model).",
+    )
     return p.parse_args()
 
 
@@ -147,7 +158,21 @@ def main():
     # Instantiate models
     ModelCls = MODEL_REGISTRY[args.model]
     t2i_model = ModelCls(device=args.device)
-    generator = ImageGenerator(model=t2i_model, out_dir=str(out_dir / "images"))
+    use_cache = not args.no_cache
+    
+    # Use cached images directory if available, otherwise use experiment-specific directory
+    if use_cache and args.cache_dir:
+        cache_path = Path(args.cache_dir) / t2i_model.name
+        if cache_path.exists():
+            images_dir = cache_path
+            print(f"Using cached images from: {images_dir}")
+        else:
+            images_dir = ensure_dir(out_dir / "images")
+            print(f"Cache directory {cache_path} not found, using: {images_dir}")
+    else:
+        images_dir = ensure_dir(out_dir / "images")
+    
+    generator = ImageGenerator(model=t2i_model, out_dir=str(images_dir), use_cache=use_cache)
 
     clip_scorer = ClipScorer(device=args.device)
     captioner = Captioner(device=args.device)   # you implement this
@@ -169,11 +194,13 @@ def main():
         gen_results = generator.generate_for_prompt(
             prompt_text,
             seeds=seeds,
+            prompt_id=prompt_id,
             extra_meta={
                 "prompt_id": prompt_id,
                 "category": category,
                 "experiment": "exp3_aleatoric",
             },
+            return_latents=False,
         )
 
         images = [r["image"] for r in gen_results]
